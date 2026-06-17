@@ -556,16 +556,16 @@
 
         .footer-logos {
             margin-top: 15px;
-            overflow: hidden;
-            white-space: nowrap;
-            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            align-items: center;
         }
 
         .footer-logos-container {
-            display: inline-flex;
+            display: flex;
             gap: 80px;
             align-items: center;
-            animation: scroll-left 20s linear infinite;
         }
 
         .footer-brand {
@@ -579,15 +579,6 @@
             font-family: Georgia, serif;
             font-size: 1rem;
             white-space: nowrap;
-        }
-
-        @keyframes scroll-left {
-            0% {
-                transform: translateX(100%);
-            }
-            100% {
-                transform: translateX(-100%);
-            }
         }
 
         .footer-logos img {
