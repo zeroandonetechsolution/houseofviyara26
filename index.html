@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House of Viyara26 - Catalogue</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #1a0f0f 0%, #2d1810 50%, #1a0f0f 100%);
+            color: #f0e6d2;
+            min-height: 100vh;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(180deg, #3d1f15 0%, #2a1410 100%);
+            padding: 40px 20px;
+            border-bottom: 3px solid #b8860b;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            justify-content: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            width: 140px;
+            height: 140px;
+            border: 3px solid #d4af37;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .logo-text h1 {
+            color: #d4af37;
+            font-size: 2.8rem;
+            letter-spacing: 4px;
+            font-weight: 300;
+            text-align: center;
+        }
+
+        .logo-text p {
+            color: #f0e6d2;
+            text-align: center;
+            font-size: 1rem;
+            letter-spacing: 6px;
+            margin-top: 8px;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: transparent;
+            color: #f0e6d2;
+            padding: 12px 40px;
+            text-decoration: none;
+            font-weight: 500;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            letter-spacing: 3px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-family: 'Georgia', serif;
+            cursor: pointer;
+        }
+
+        .nav-btn:hover {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: #d4af37;
+            color: #d4af37;
+        }
+
+        .nav-btn.active {
+            background: #d4af37;
+            color: #1a0f0f;
+            border-color: #d4af37;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 60px 20px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: linear-gradient(180deg, #2a1410 0%, #1f100e 100%);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 25px;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: #d4af37;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .product-name {
+            font-size: 1.6rem;
+            color: #d4af37;
+            margin-bottom: 12px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .product-category {
+            color: #f0e6d2;
+            display: inline-block;
+            padding: 6px 18px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            margin-bottom: 18px;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .product-price {
+            font-size: 2rem;
+            color: #d4af37;
+            margin-bottom: 15px;
+            font-weight: 300;
+        }
+
+        .product-description {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #c9b896;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .product-sizes, .product-colors {
+            margin-top: 10px;
+        }
+
+        .size-tag, .color-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            margin: 2px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            font-size: 0.85rem;
+        }
+
+        .color-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .color-swatch {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid #000;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .form-section {
+            background: linear-gradient(180deg, #2a1410 0%, #1f100e 100%);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .form-section h2 {
+            color: #d4af37;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #f0e6d2;
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            background: rgba(0, 0, 0, 0.2);
+            color: #f0e6d2;
+            font-family: 'Georgia', serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 14px 40px;
+            border: 1px solid #d4af37;
+            background: transparent;
+            color: #d4af37;
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            font-family: 'Georgia', serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #d4af37;
+            color: #1a0f0f;
+        }
+
+        .btn-primary {
+            background: #d4af37;
+            color: #1a0f0f;
+        }
+
+        .btn-primary:hover {
+            background: #b8860b;
+        }
+
+        .btn-danger {
+            border-color: #8b0000;
+            color: #ff6b6b;
+        }
+
+        .btn-danger:hover {
+            background: #8b0000;
+            color: #fff;
+        }
+
+        .btn-success {
+            border-color: #006400;
+            color: #90ee90;
+        }
+
+        .btn-success:hover {
+            background: #006400;
+            color: #1a0f0f;
+        }
+
+        .product-list {
+            background: linear-gradient(180deg, #2a1410 0%, #1f100e 100%);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 40px;
+        }
+
+        .product-list h2 {
+            color: #d4af37;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-align: center;
+        }
+
+        .admin-product-item {
+            display: flex;
+            gap: 25px;
+            padding: 25px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            flex-wrap: wrap;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .admin-product-item:hover {
+            border-color: #d4af37;
+        }
+
+        .admin-product-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .admin-product-details {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .admin-product-details h3 {
+            color: #d4af37;
+            font-size: 1.4rem;
+            font-weight: 300;
+            margin-bottom: 8px;
+        }
+
+        .admin-product-details p {
+            color: #c9b896;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .admin-product-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .size-checkbox-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .size-checkbox-label:hover {
+            border-color: #d4af37;
+        }
+
+        .size-checkbox-label.selected {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: #d4af37;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: #fff;
+            box-shadow: 0 0 0 2px #d4af37;
+        }
+
+        .selected-color-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            margin: 4px;
+        }
+
+        .selected-color-item .remove-btn {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #8b0000;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .image-upload-area {
+            border: 2px dashed rgba(212, 175, 55, 0.4);
+            padding: 30px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .image-upload-area:hover {
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .image-upload-area label {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .image-preview {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            margin-top: 15px;
+        }
+
+        .image-upload-or {
+            margin: 15px 0;
+            color: #c9b896;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            background: #0a0505;
+            color: #f0e6d2;
+            padding: 60px 40px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h2 {
+            color: #d4af37;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .footer-section .tagline {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: #d4af37;
+            color: #0a0505;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #c9b896;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #d4af37;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .footer-bottom p {
+            margin-bottom: 10px;
+            color: #888;
+        }
+
+        .footer-powered {
+            color: #d4af37;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 900px) {
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo-text h1 {
+                font-size: 2rem;
+            }
+            .logo {
+                width: 100px;
+                height: 100px;
+            }
+            .nav {
+                gap: 20px;
+            }
+            .nav-btn {
+                padding: 10px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="logo-section">
+                <img 
+                    src="src/assets/710665886_18086176856123502_497256021498327508_n.jpg" 
+                    alt="House of Viyara26" 
+                    class="logo"
+                    id="logo"
+                />
+                <div class="logo-text">
+                    <h1>House of Viyara26</h1>
+                    <p>ELEGANT. TIMELESS. YOU.</p>
+                </div>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn active" onclick="showPage('catalogue')">CATALOGUE</button>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <div id="catalogue" class="page active">
+                <div class="product-grid" id="productGrid"></div>
+            </div>
+
+            <div id="admin" class="page">
+                <div class="admin-container">
+                    <div class="form-section">
+                        <h2 id="formTitle">Add New Product</h2>
+                        <form id="productForm" onsubmit="saveProduct(event)">
+                            <input type="hidden" id="productId">
+                            <div class="form-group">
+                                <label>Product Name</label>
+                                <input type="text" id="productName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Category</label>
+                                <select id="productCategory" required onchange="toggleClothingFields()">
+                                    <option value="clothing">Clothing</option>
+                                    <option value="gift">Gift</option>
+                                    <option value="custom">Customized Gift</option>
+                                </select>
+                            </div>
+                            <div id="clothingFields">
+                                <div class="form-group">
+                                    <label>Sizes (select all that apply)</label>
+                                    <div id="sizeCheckboxes" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Colors (search & select)</label>
+                                    <div style="margin-bottom:8px;">
+                                        <input type="text" id="colorSearch" placeholder="Search for a color..." style="width:100%; padding:10px; border:1px solid rgba(212,175,55,0.4); background:rgba(0,0,0,0.2); color:#f0e6d2; font-family:Georgia,serif;" oninput="searchColors()">
+                                    </div>
+                                    <div id="colorPalette" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px;"></div>
+                                    <div id="selectedColors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea id="productDescription" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Product Image</label>
+                                <div class="image-upload-area">
+                                    <input type="file" id="productImageUpload" accept="image/*" style="display: none;">
+                                    <label for="productImageUpload">
+                                        <div class="upload-icon">📷</div>
+                                        <span>Click to upload image from your computer</span>
+                                    </label>
+                                    <div class="image-upload-or">OR</div>
+                                    <div>
+                                        <label>Image URL</label>
+                                        <input type="url" id="productImage" placeholder="https://example.com/image.jpg">
+                                    </div>
+                                    <img id="imagePreview" class="image-preview" style="display:none;">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Price (₹)</label>
+                                <input type="text" id="productPrice" placeholder="1,000" required oninput="formatIndianNumber(this)">
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">Add Product</button>
+                            <button type="button" class="btn btn-success" id="cancelBtn" style="display:none" onclick="cancelEdit()">Cancel</button>
+                        </form>
+                    </div>
+
+                    <div class="product-list">
+                        <h2>Manage Products</h2>
+                        <div id="adminProductList"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-section">
+                    <h2>HOUSE OF VIYARA26</h2>
+                    <p class="tagline">Redefining luxury with curated clothing and gifts, uncompromised comfort.</p>
+                    <div class="social-icons">
+                        <div class="social-icon">📸</div>
+                        <div class="social-icon">🐦</div>
+                        <div class="social-icon">👥</div>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h2>SHOP</h2>
+                    <ul class="footer-links">
+                        <li><a href="#">Clothing</a></li>
+                        <li><a href="#">Gifts</a></li>
+                        <li><a href="#">Custom Gifts</a></li>
+                        <li><a href="#">New Arrivals</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h2>LEGAL</h2>
+                    <ul class="footer-links">
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Data Safety</a></li>
+                        <li><a href="#" onclick="toggleAdminAccess(); return false;">Admin Panel</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2026 House of Viyara26. All Rights Reserved.</p>
+                <p class="footer-powered">POWERED BY ZERO & ONE TECH SOLUTION PVT LTD</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let products = [];
+        let editingId = null;
+        let selectedColors = [];
+        let selectedSizes = [];
+        let currentImageData = null;
+
+        const standardSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'];
+        
+        const popularColors = [
+            { name: 'Red', hex: '#FF0000' },
+            { name: 'Maroon', hex: '#800000' },
+            { name: 'Pink', hex: '#FFC0CB' },
+            { name: 'Hot Pink', hex: '#FF69B4' },
+            { name: 'Orange', hex: '#FFA500' },
+            { name: 'Yellow', hex: '#FFFF00' },
+            { name: 'Gold', hex: '#FFD700' },
+            { name: 'Green', hex: '#008000' },
+            { name: 'Lime', hex: '#00FF00' },
+            { name: 'Olive', hex: '#808000' },
+            { name: 'Teal', hex: '#008080' },
+            { name: 'Cyan', hex: '#00FFFF' },
+            { name: 'Blue', hex: '#0000FF' },
+            { name: 'Navy', hex: '#000080' },
+            { name: 'Sky Blue', hex: '#87CEEB' },
+            { name: 'Purple', hex: '#800080' },
+            { name: 'Lavender', hex: '#E6E6FA' },
+            { name: 'Magenta', hex: '#FF00FF' },
+            { name: 'Brown', hex: '#A52A2A' },
+            { name: 'Beige', hex: '#F5F5DC' },
+            { name: 'White', hex: '#FFFFFF' },
+            { name: 'Black', hex: '#000000' },
+            { name: 'Gray', hex: '#808080' },
+            { name: 'Silver', hex: '#C0C0C0' }
+        ];
+
+        const defaultProducts = [
+            {
+                id: 1,
+                name: 'Vintage Silk Saree',
+                category: 'clothing',
+                price: 4999,
+                description: 'Handwoven silk saree with intricate zari work',
+                image: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=elegant%20vintage%20silk%20saree%20royal%20design&image_size=square_hd',
+                sizes: ['S', 'M', 'L', 'XL'],
+                colors: [{ name: 'Maroon', hex: '#800000' }, { name: 'Gold', hex: '#FFD700' }]
+            },
+            {
+                id: 2,
+                name: 'Silver Plated Jewelry Box',
+                category: 'gift',
+                price: 2499,
+                description: 'Handcrafted silver plated jewelry box with velvet lining',
+                image: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=elegant%20silver%20jewelry%20box%20luxury%20gift&image_size=square_hd',
+                sizes: [],
+                colors: []
+            },
+            {
+                id: 3,
+                name: 'Customized Photo Album',
+                category: 'custom',
+                price: 3999,
+                description: 'Premium leather-bound photo album with gold embossing',
+                image: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=elegant%20leather%20photo%20album%20luxury%20custom&image_size=square_hd',
+                sizes: [],
+                colors: []
+            }
+        ];
+
+        function loadProducts() {
+            const saved = localStorage.getItem('viyaraProducts');
+            products = saved ? JSON.parse(saved) : [...defaultProducts];
+            if (!saved) {
+                saveToLocalStorage();
+            }
+            renderProducts();
+            renderAdminList();
+            initSizeCheckboxes();
+            initColorPalette();
+            toggleClothingFields();
+            initImageUpload();
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('viyaraProducts', JSON.stringify(products));
+        }
+
+        function formatIndianNumber(input) {
+            let value = input.value.replace(/[^0-9]/g, '');
+            if (value.length === 0) {
+                input.value = '';
+                return;
+            }
+            
+            let formatted = '';
+            let n = value.length;
+            
+            if (n > 3) {
+                formatted = value.slice(0, n - 3);
+                n = formatted.length;
+                if (n > 2) {
+                    let firstPart = formatted.slice(0, n % 2);
+                    let restPart = formatted.slice(n % 2).match(/.{2}/g);
+                    if (firstPart) {
+                        formatted = firstPart + ',';
+                    }
+                    if (restPart) {
+                        formatted += restPart.join(',');
+                    }
+                }
+                formatted += ',';
+                formatted += value.slice(value.length - 3);
+            } else {
+                formatted = value;
+            }
+            
+            input.value = formatted;
+        }
+
+        function parseFormattedNumber(value) {
+            return parseInt(value.replace(/,/g, ''), 10) || 0;
+        }
+
+        function formatNumberForDisplay(num) {
+            let value = num.toString();
+            let formatted = '';
+            let n = value.length;
+            
+            if (n > 3) {
+                formatted = value.slice(0, n - 3);
+                n = formatted.length;
+                if (n > 2) {
+                    let firstPart = formatted.slice(0, n % 2);
+                    let restPart = formatted.slice(n % 2).match(/.{2}/g);
+                    if (firstPart) {
+                        formatted = firstPart + ',';
+                    }
+                    if (restPart) {
+                        formatted += restPart.join(',');
+                    }
+                }
+                formatted += ',';
+                formatted += value.slice(value.length - 3);
+            } else {
+                formatted = value;
+            }
+            
+            return formatted;
+        }
+
+        let isAdminVisible = false;
+
+        function toggleAdminAccess() {
+            isAdminVisible = !isAdminVisible;
+            const nav = document.querySelector('.nav');
+            if (isAdminVisible) {
+                const adminBtn = document.createElement('button');
+                adminBtn.className = 'nav-btn';
+                adminBtn.id = 'admin-nav-btn';
+                adminBtn.textContent = 'ADMIN';
+                adminBtn.onclick = function() {
+                    showPage('admin');
+                    this.classList.add('active');
+                    document.querySelector('.nav-btn:not(#admin-nav-btn) + button').classList.remove('active');
+                };
+                nav.appendChild(adminBtn);
+                showPage('admin');
+                adminBtn.classList.add('active');
+                document.querySelector('.nav-btn:first-child').classList.remove('active');
+            } else {
+                const adminBtn = document.getElementById('admin-nav-btn');
+                if (adminBtn) adminBtn.remove();
+                showPage('catalogue');
+                document.querySelector('.nav-btn:first-child').classList.add('active');
+            }
+        }
+
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(pageName).classList.add('active');
+            const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b => 
+                b.textContent.toLowerCase() === pageName.toUpperCase());
+            if (activeBtn) activeBtn.classList.add('active');
+            if (pageName === 'admin') {
+                renderAdminList();
+                toggleClothingFields();
+            }
+        }
+
+        function toggleClothingFields() {
+            const category = document.getElementById('productCategory').value;
+            const clothingFields = document.getElementById('clothingFields');
+            if (category === 'clothing') {
+                clothingFields.style.display = 'block';
+            } else {
+                clothingFields.style.display = 'none';
+            }
+        }
+
+        function initSizeCheckboxes() {
+            const container = document.getElementById('sizeCheckboxes');
+            container.innerHTML = standardSizes.map(size => {
+                return '<label class="size-checkbox-label" id="size-' + size + '">' +
+                    '<input type="checkbox" value="' + size + '" onchange="toggleSize(\'' + size + '\')" style="display:none;">' +
+                    '<span>' + size + '</span>' +
+                '</label>';
+            }).join('');
+        }
+
+        function toggleSize(size) {
+            const index = selectedSizes.indexOf(size);
+            if (index > -1) {
+                selectedSizes.splice(index, 1);
+                document.getElementById("size-" + size).classList.remove('selected');
+            } else {
+                selectedSizes.push(size);
+                document.getElementById("size-" + size).classList.add('selected');
+            }
+        }
+
+        function setSelectedSizes(sizes) {
+            selectedSizes = [...sizes];
+            standardSizes.forEach(size => {
+                const label = document.getElementById("size-" + size);
+                if (selectedSizes.includes(size)) {
+                    label.classList.add('selected');
+                } else {
+                    label.classList.remove('selected');
+                }
+            });
+        }
+
+        function initColorPalette() {
+            renderColorPalette(popularColors);
+            renderSelectedColors();
+        }
+
+        function renderColorPalette(colors) {
+            const container = document.getElementById('colorPalette');
+            container.innerHTML = colors.map(color => `
+                <div 
+                    class="color-option" 
+                    style="background-color: ${color.hex};" 
+                    title="${color.name}"
+                    onclick="selectColor('${color.name}', '${color.hex}')"
+                ></div>
+            `).join('');
+        }
+
+        function searchColors() {
+            const searchTerm = document.getElementById('colorSearch').value.toLowerCase();
+            const filteredColors = popularColors.filter(color => 
+                color.name.toLowerCase().includes(searchTerm)
+            );
+            renderColorPalette(filteredColors);
+        }
+
+        function selectColor(name, hex) {
+            if (!selectedColors.find(c => c.hex === hex)) {
+                selectedColors.push({ name, hex });
+                renderSelectedColors();
+            }
+        }
+
+        function removeSelectedColor(index) {
+            selectedColors.splice(index, 1);
+            renderSelectedColors();
+        }
+
+        function renderSelectedColors() {
+            const container = document.getElementById('selectedColors');
+            container.innerHTML = selectedColors.map((color, index) => `
+                <div class="selected-color-item">
+                    <div class="color-swatch" style="background-color: ${color.hex};"></div>
+                    <span>${color.name}</span>
+                    <div class="remove-btn" onclick="removeSelectedColor(${index})">×</div>
+                </div>
+            `).join('');
+        }
+
+        function initImageUpload() {
+            const fileInput = document.getElementById('productImageUpload');
+            fileInput.addEventListener('change', handleImageUpload);
+        }
+
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    currentImageData = event.target.result;
+                    document.getElementById('imagePreview').src = currentImageData;
+                    document.getElementById('imagePreview').style.display = 'block';
+                    document.getElementById('productImage').value = '';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveProduct(e) {
+            e.preventDefault();
+            
+            let productImage = document.getElementById('productImage').value;
+            if (!productImage && currentImageData) {
+                productImage = currentImageData;
+            } else if (!productImage && !currentImageData) {
+                productImage = document.getElementById('productImage').value;
+            } else if (currentImageData) {
+                productImage = currentImageData;
+            }
+
+            const product = {
+                id: editingId || Date.now(),
+                name: document.getElementById('productName').value,
+                category: document.getElementById('productCategory').value,
+                price: parseFormattedNumber(document.getElementById('productPrice').value),
+                description: document.getElementById('productDescription').value,
+                image: productImage,
+                sizes: document.getElementById('productCategory').value === 'clothing' ? selectedSizes : [],
+                colors: document.getElementById('productCategory').value === 'clothing' ? selectedColors : []
+            };
+
+            if (editingId) {
+                const index = products.findIndex(p => p.id === editingId);
+                products[index] = product;
+            } else {
+                products.push(product);
+            }
+
+            saveToLocalStorage();
+            renderProducts();
+            renderAdminList();
+            resetForm();
+        }
+
+        function editProduct(id) {
+            const product = products.find(p => p.id === id);
+            editingId = id;
+            
+            document.getElementById('productId').value = id;
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productCategory').value = product.category;
+            
+            let priceInput = document.getElementById('productPrice');
+            priceInput.value = product.price;
+            formatIndianNumber(priceInput);
+            
+            document.getElementById('productDescription').value = product.description;
+            
+            if (product.image && product.image.startsWith('data:image')) {
+                currentImageData = product.image;
+                document.getElementById('imagePreview').src = currentImageData;
+                document.getElementById('imagePreview').style.display = 'block';
+            } else {
+                document.getElementById('productImage').value = product.image || '';
+            }
+            
+            toggleClothingFields();
+            
+            if (product.category === 'clothing') {
+                setSelectedSizes(product.sizes || []);
+                selectedColors = product.colors || [];
+                renderSelectedColors();
+            }
+            
+            document.getElementById('formTitle').textContent = 'Edit Product';
+            document.getElementById('submitBtn').textContent = 'Update Product';
+            document.getElementById('cancelBtn').style.display = 'inline-block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function deleteProduct(id) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                products = products.filter(p => p.id !== id);
+                saveToLocalStorage();
+                renderProducts();
+                renderAdminList();
+            }
+        }
+
+        function cancelEdit() {
+            resetForm();
+        }
+
+        function resetForm() {
+            editingId = null;
+            selectedColors = [];
+            selectedSizes = [];
+            currentImageData = null;
+            document.getElementById('productForm').reset();
+            document.getElementById('formTitle').textContent = 'Add New Product';
+            document.getElementById('submitBtn').textContent = 'Add Product';
+            document.getElementById('cancelBtn').style.display = 'none';
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('imagePreview').src = '';
+            initSizeCheckboxes();
+            initColorPalette();
+            toggleClothingFields();
+            renderSelectedColors();
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/320x280/2a1410/d4af37?text=Product'">
+                    <h3 class="product-name">${product.name}</h3>
+                    <span class="product-category">${product.category.toUpperCase()}</span>
+                    <div class="product-price">₹${formatNumberForDisplay(product.price)}</div>
+                    <p class="product-description">${product.description}</p>
+                    ${product.sizes && product.sizes.length > 0 ? `
+                        <div class="product-sizes">
+                            <strong>Sizes:</strong>
+                            ${product.sizes.map(size => `<span class="size-tag">${size}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                    ${product.colors && product.colors.length > 0 ? `
+                        <div class="product-colors">
+                            <strong>Colors:</strong>
+                            ${product.colors.map(color => `
+                                <span class="color-tag">
+                                    <div class="color-swatch" style="background-color: ${color.hex};"></div>
+                                    ${color.name}
+                                </span>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function renderAdminList() {
+            const list = document.getElementById('adminProductList');
+            list.innerHTML = products.map(product => `
+                <div class="admin-product-item">
+                    <img src="${product.image}" alt="${product.name}" class="admin-product-image" onerror="this.src='https://via.placeholder.com/120/2a1410/d4af37?text=Product'">
+                    <div class="admin-product-details">
+                        <h3>${product.name}</h3>
+                        <p>₹${formatNumberForDisplay(product.price)} - ${product.category.toUpperCase()}</p>
+                        ${product.sizes && product.sizes.length > 0 ? `<p>Sizes: ${product.sizes.join(', ')}</p>` : ''}
+                        ${product.colors && product.colors.length > 0 ? `<p>Colors: ${product.colors.map(c => c.name).join(', ')}</p>` : ''}
+                    </div>
+                    <div class="admin-product-actions">
+                        <button class="btn btn-success" onclick="editProduct(${product.id})">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteProduct(${product.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.onload = loadProducts;
+    </script>
+</body>
+</html>
