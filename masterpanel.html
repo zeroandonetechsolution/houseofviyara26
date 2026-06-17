@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master / Developer Panel - House Of Viyara26</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #1a0f0f 0%, #2d1810 50%, #1a0f0f 100%);
+            color: #f0e6d2;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            background: linear-gradient(135deg, #1a0f0f, #2d1810);
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            padding: 30px;
+        }
+
+        h1 {
+            color: #d4af37;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .nav-link {
+            color: #c9b896;
+            text-decoration: none;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .nav-link:hover {
+            color: #d4af37;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #d4af37;
+            background: rgba(0, 0, 0, 0.3);
+            color: #f0e6d2;
+            font-family: Georgia, serif;
+        }
+
+        .btn {
+            padding: 14px 40px;
+            border: 1px solid #d4af37;
+            background: transparent;
+            color: #d4af37;
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            font-family: Georgia, serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #d4af37;
+            color: #1a0f0f;
+        }
+
+        .btn-primary {
+            background: #d4af37;
+            color: #1a0f0f;
+        }
+
+        .btn-primary:hover {
+            background: #b8860b;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 5px;
+        }
+
+        .section h3 {
+            color: #d4af37;
+            margin-bottom: 15px;
+        }
+
+        .log-entry {
+            padding: 8px;
+            margin: 5px 0;
+            border-left: 3px solid #d4af37;
+            background: rgba(212, 175, 55, 0.05);
+            color: #c9b896;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .log-entry.error {
+            border-left-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .toggle-btn {
+            background: #006400;
+            border-color: #006400;
+            color: white;
+        }
+
+        .toggle-btn.blocked {
+            background: #8b0000;
+            border-color: #8b0000;
+        }
+
+        .system-info {
+            color: #c9b896;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="panel">
+            <h1>Master / Developer Panel</h1>
+            <a href="index.html" class="nav-link">← Back to Website</a>
+            
+            <div id="masterPasswordSection">
+                <input type="password" id="masterPassword" class="password-input" placeholder="Enter Master Password">
+                <button class="btn btn-primary" onclick="verifyMasterPassword()">Unlock Panel</button>
+            </div>
+            
+            <div id="masterContent" style="display:none;">
+                <div class="section">
+                    <h3>Website Status Control</h3>
+                    <button class="btn toggle-btn" id="blockToggleBtn" onclick="toggleWebsiteBlock()">Website Active</button>
+                </div>
+                
+                <div class="section">
+                    <h3>Diagnostic Logs</h3>
+                    <div id="logContainer"></div>
+                    <button class="btn" onclick="clearLogs()" style="margin-top:10px;">Clear Logs</button>
+                </div>
+                
+                <div class="section">
+                    <h3>System Info</h3>
+                    <p id="systemInfo" class="system-info"></p>
+                    <p id="productCount" class="system-info"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let logs = [];
+        let MASTER_PASSWORD = "admin123"; // Change this to your own secure password!
+
+        function verifyMasterPassword() {
+            const entered = document.getElementById('masterPassword').value;
+            if (entered === MASTER_PASSWORD) {
+                document.getElementById('masterPasswordSection').style.display = 'none';
+                document.getElementById('masterContent').style.display = 'block';
+                loadMasterPanelData();
+            } else {
+                alert('Incorrect password!');
+            }
+        }
+
+        function loadMasterPanelData() {
+            updateSystemInfo();
+            updateWebsiteToggle();
+            loadLogs();
+        }
+
+        function updateSystemInfo() {
+            document.getElementById('systemInfo').innerText = `Browser: ${navigator.userAgent}\nDate: ${new Date().toLocaleString()}`;
+            
+            // Load products from localStorage to count them
+            const savedProducts = localStorage.getItem('viyaraProducts');
+            const products = savedProducts ? JSON.parse(savedProducts) : [];
+            document.getElementById('productCount').innerText = `Total Products: ${products.length}`;
+        }
+
+        function updateWebsiteToggle() {
+            const isBlocked = localStorage.getItem('siteBlocked') === 'true';
+            const btn = document.getElementById('blockToggleBtn');
+            if (isBlocked) {
+                btn.classList.add('blocked');
+                btn.innerText = 'Website Blocked (Click to Unblock)';
+            } else {
+                btn.classList.remove('blocked');
+                btn.innerText = 'Website Active (Click to Block)';
+            }
+        }
+
+        function toggleWebsiteBlock() {
+            const isBlocked = localStorage.getItem('siteBlocked') === 'true';
+            localStorage.setItem('siteBlocked', (!isBlocked).toString());
+            updateWebsiteToggle();
+        }
+
+        function loadLogs() {
+            const saved = localStorage.getItem('masterLogs');
+            if (saved) logs = JSON.parse(saved);
+            renderLogs();
+        }
+
+        function renderLogs() {
+            const container = document.getElementById('logContainer');
+            if (!logs.length) {
+                container.innerHTML = '<p style="color: #888;">No logs yet</p>';
+                return;
+            }
+            container.innerHTML = logs.map(log => `
+                <div class="log-entry ${log.type === 'error' ? 'error' : ''}">
+                    [${log.time}] ${log.message}
+                </div>
+            `).join('');
+        }
+
+        function clearLogs() {
+            logs = [];
+            localStorage.setItem('masterLogs', JSON.stringify(logs));
+            renderLogs();
+        }
+
+        // Load initial data
+        window.onload = function() {
+            loadLogs();
+        };
+    </script>
+</body>
+</html>
