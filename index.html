@@ -1020,6 +1020,9 @@
             </div>
             <nav class="nav">
                 <!-- Catalogue button removed per request -->
+                <!-- mobile header icon removed per preference; bottom 'FILTERS' pill will be used on mobile -->
+                <button id="mobileFilterBtn" class="nav-btn mobile-filter-btn" onclick="openFilters()" aria-label="Open filters" style="display:none; visibility:hidden;">
+                </button>
                 <span id="adminAuthArea"></span>
             </nav>
         </header>
@@ -1051,6 +1054,98 @@
                 @media (max-width: 900px) {
                     .catalogue-grid { grid-template-columns: 1fr; }
                     .filters { position: relative; top: auto; }
+                    .filters { margin-bottom: 18px; }
+                    .price-options-box {
+                        border: 3px solid #000;
+                        padding: 14px;
+                        box-shadow: 6px 6px 0 #000;
+                        background: var(--card-bg);
+                    }
+                    .price-options-box label { font-weight:700; }
+                    #sortSelect { border:3px solid #000; box-shadow:6px 6px 0 #000; }
+                    .trending-header h2 { font-size:1.6rem; }
+                    .mobile-filter-btn { display: inline-block; padding: 8px 12px; font-size: 1.1rem; }
+                    /* make filters behave as a slide-in drawer on mobile */
+                    .filters {
+                        position: fixed;
+                        right: 0;
+                        top: 0;
+                        height: 100vh;
+                        width: 86%;
+                        max-width: 360px;
+                        transform: translateX(100%);
+                        transition: transform 0.28s ease;
+                        z-index: 10050;
+                        box-shadow: -12px 0 28px rgba(0,0,0,0.2);
+                    }
+                    .filters.open { transform: translateX(0); }
+                    .filters .btn { width:100%; }
+                    .filters-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 10040; display:none; }
+                    .filters-overlay.show { display:block; }
+                }
+
+                /* Trending products large card style (Fig2) */
+                .trending-header h2 {
+                    font-size: 2.2rem;
+                    letter-spacing: 0.04em;
+                    text-transform:uppercase;
+                    font-weight:900;
+                    border-bottom:4px solid #000;
+                    padding-bottom:10px;
+                }
+
+                .trending-products-grid .product-card {
+                    background: var(--card-bg);
+                    border: 3px solid #000;
+                    box-shadow: 6px 6px 0 #000;
+                    padding: 0;
+                }
+
+                .trending-products-grid .product-image {
+                    height: 360px;
+                    width: 100%;
+                    object-fit: cover;
+                    border-bottom: 4px solid #000;
+                }
+
+                .trending-products-grid .product-name {
+                    font-size: 1.4rem;
+                    text-transform:uppercase;
+                    padding: 18px 16px 6px;
+                    color: #000;
+                }
+
+                .trending-products-grid .product-description {
+                    padding: 0 16px 12px;
+                    color: #666;
+                }
+
+                .trending-products-grid .product-price {
+                    padding: 0 16px 24px;
+                    font-weight:900;
+                    color: var(--accent-pink);
+                }
+            </style>
+            <style>
+                /* Bottom-centered mobile Filters pill */
+                .mobile-filter-toggle {
+                    position: fixed;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    bottom: 12px;
+                    z-index: 10060;
+                    background: var(--accent-yellow);
+                    color: #000;
+                    padding: 10px 18px;
+                    border: 3px solid #000;
+                    box-shadow: 6px 6px 0 #000;
+                    font-weight: 900;
+                    letter-spacing: 0.06em;
+                    display: none;
+                    cursor: pointer;
+                }
+                @media (max-width: 900px) {
+                    .mobile-filter-toggle { display: block; }
                 }
             </style>
             <div id="catalogue" class="page active">
@@ -1058,6 +1153,18 @@
                     <aside class="filters" id="filtersPanel">
                         <h3 style="margin-bottom:12px;">Filters</h3>
                         <div class="filter-section">
+                            <strong>Sort</strong>
+                            <div style="margin-top:8px;">
+                                <select id="sortSelect" onchange="onSortChange(this.value)" style="width:100%; padding:10px; border:3px solid #000;">
+                                    <option value="featured">Featured</option>
+                                    <option value="newest">Newest</option>
+                                    <option value="price-asc">Price: Low to High</option>
+                                    <option value="price-desc">Price: High to Low</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="filter-section" style="margin-top:14px;">
                             <strong>Fabric Type</strong>
                             <div id="fabricFilters" style="margin-top:8px; display:flex; flex-direction:column; gap:8px;"></div>
                         </div>
@@ -1070,13 +1177,30 @@
                             </div>
                         </div>
 
+                        <div class="filter-section price-options-box" style="margin-top:18px;">
+                            <strong>Price Range</strong>
+                            <div style="margin-top:8px; display:flex; flex-direction:column; gap:8px;">
+                                <label style="display:flex; gap:10px; align-items:center;"><input type="radio" name="priceOption" value="all" checked onchange="onPriceOptionChange('all')"> All Prices</label>
+                                <label style="display:flex; gap:10px; align-items:center;"><input type="radio" name="priceOption" value="under3000" onchange="onPriceOptionChange('under3000')"> Under ₹3000</label>
+                                <label style="display:flex; gap:10px; align-items:center;"><input type="radio" name="priceOption" value="3000-6000" onchange="onPriceOptionChange('3000-6000')"> ₹3000 - ₹6000</label>
+                            </div>
+                        </div>
+
                         <div style="margin-top:18px;">
                             <button class="btn" onclick="resetFilters()">Reset Filters</button>
                         </div>
                     </aside>
 
                     <section class="catalogue-content">
-                        <div class="trending-collections" id="trendingCollections" style="margin-bottom:24px;"></div>
+                        <!-- Trending header (Fig2 style) -->
+                        <div class="trending-header" style="margin-bottom:18px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                            <h2 style="margin:0;">TRENDING NOW</h2>
+                            <button id="viewAllBtn" class="btn" onclick="showPage('catalogue')" style="background:var(--accent-blue); color:#000; border:3px solid #000; box-shadow:6px 6px 0 #000;">VIEW ALL</button>
+                        </div>
+
+                        <div id="trendingProducts" class="trending-products-grid" style="margin-bottom:28px; display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:30px;"></div>
+
+                        <div class="trending-collections" id="trendingCollections" style="margin-bottom:24px; display:none;"></div>
                         <div class="product-grid" id="productGrid"></div>
                     </section>
                 </div>
@@ -1161,6 +1285,9 @@
                 </div>
             </div>
         </main>
+
+        <!-- Mobile bottom FILTERS pill -->
+        <button class="mobile-filter-toggle" onclick="openFilters()">FILTERS</button>
 
         <footer class="footer">
             <div class="footer-container">
@@ -1291,6 +1418,8 @@
         const fabricTypes = ['pure cotton', 'maxis', 'kurti', 'kurti sets', 'cordsets'];
         let selectedFabrics = [];
         let priceMax = 10000;
+        let priceOption = 'all';
+        let sortOption = 'featured';
 
         function renderCollections() {
             const container = document.getElementById('trendingCollections');
@@ -1320,8 +1449,12 @@
             const f = checkbox.value;
             if (checkbox.checked) {
                 if (!selectedFabrics.includes(f)) selectedFabrics.push(f);
+                // navigate directly to the fabric page for focused view
+                showFabricPage(f);
             } else {
                 selectedFabrics = selectedFabrics.filter(x => x !== f);
+                // if no fabrics remain selected, return to catalogue
+                if (selectedFabrics.length === 0) showPage('catalogue');
             }
             // sync collection cards
             document.querySelectorAll('.collection-card').forEach(c => c.classList.toggle('selected', selectedFabrics.includes(c.dataset.fabric)));
@@ -1354,6 +1487,17 @@
             renderProducts();
         }
 
+        function onPriceOptionChange(opt) {
+            priceOption = opt;
+            // when a price option is chosen, we ignore the slider and filter by option
+            renderProducts();
+        }
+
+        function onSortChange(val) {
+            sortOption = val;
+            renderProducts();
+        }
+
         function resetFilters() {
             selectedFabrics = [];
             priceMax = parseInt(document.getElementById('priceRange').max, 10) || 10000;
@@ -1362,6 +1506,78 @@
             document.querySelectorAll('#fabricFilters input').forEach(i=>i.checked=false);
             document.querySelectorAll('.collection-card').forEach(c=>c.classList.remove('selected'));
             renderProducts();
+        }
+
+        function showFabricPage(fabric) {
+            // set title and intro
+            const title = document.getElementById('fabricTitle');
+            const intro = document.getElementById('fabricIntro');
+            title.textContent = fabric.toUpperCase();
+            intro.textContent = `Showing products in "${fabric}"`;
+
+            // render filtered products into fabricProductGrid
+            const grid = document.getElementById('fabricProductGrid');
+            const filtered = products.filter(p => p.fabric && p.fabric === fabric && (typeof p.price !== 'number' || p.price <= priceMax));
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div style="padding:24px; text-align:center;">No products for this fabric.</div>';
+            } else {
+                grid.innerHTML = filtered.map(product => `
+                    <div class="product-card">
+                        <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/320x280/2a1410/d4af37?text=Product'">
+                        <h3 class="product-name">${product.name}</h3>
+                        <div class="product-price">₹${formatNumberForDisplay(product.price)}</div>
+                        <p class="product-description">${product.description}</p>
+                    </div>
+                `).join('');
+            }
+
+            // show fabric page
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('fabricPage').classList.add('active');
+        }
+
+        function createFiltersOverlay() {
+            let ov = document.querySelector('.filters-overlay');
+            if (!ov) {
+                ov = document.createElement('div');
+                ov.className = 'filters-overlay';
+                ov.onclick = closeFilters;
+                document.body.appendChild(ov);
+            }
+            return ov;
+        }
+
+        function openFilters() {
+            const filters = document.getElementById('filtersPanel');
+            if (!filters) return;
+            filters.classList.add('open');
+            const ov = createFiltersOverlay();
+            ov.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeFilters() {
+            const filters = document.getElementById('filtersPanel');
+            if (!filters) return;
+            filters.classList.remove('open');
+            const ov = document.querySelector('.filters-overlay');
+            if (ov) ov.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        function renderTrendingProducts() {
+            const container = document.getElementById('trendingProducts');
+            if (!container) return;
+            // Choose top 3 products — prefer highest id (newest) or lowest price as needed
+            const items = products.slice().sort((a,b)=> (b.id||0)-(a.id||0)).slice(0,3);
+            container.innerHTML = items.map(product => `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/520x360/ffffff/000000?text=Product'">
+                    <h3 class="product-name">${product.name}</h3>
+                    <p class="product-description">${(product.description||'').slice(0,120)}</p>
+                    <div class="product-price">₹${formatNumberForDisplay(product.price)}</div>
+                </div>
+            `).join('');
         }
 
         function loadProducts() {
@@ -1383,6 +1599,7 @@
             renderCollections();
             renderFabricFilters();
             renderProducts();
+            renderTrendingProducts();
             renderAdminList();
             initSizeCheckboxes();
             initColorPalette();
@@ -1717,9 +1934,17 @@
         function renderProducts() {
             const grid = document.getElementById('productGrid');
             const filtered = products.filter(product => {
-                const withinPrice = (typeof product.price === 'number') ? product.price <= priceMax : true;
                 const matchesFabric = selectedFabrics.length === 0 || (product.fabric && selectedFabrics.includes(product.fabric));
-                return withinPrice && matchesFabric;
+                if (!matchesFabric) return false;
+
+                // price filtering: if priceOption is set (radio), use it; otherwise use priceMax slider
+                const price = typeof product.price === 'number' ? product.price : Infinity;
+                let withinPrice = true;
+                if (priceOption === 'under3000') withinPrice = price <= 3000;
+                else if (priceOption === '3000-6000') withinPrice = price >= 3000 && price <= 6000;
+                else withinPrice = price <= priceMax;
+
+                return withinPrice;
             });
 
             if (filtered.length === 0) {
@@ -1727,7 +1952,13 @@
                 return;
             }
 
-            grid.innerHTML = filtered.map(product => `
+            // apply sorting
+            const sorted = filtered.slice();
+            if (sortOption === 'price-asc') sorted.sort((a,b)=> (a.price||0)-(b.price||0));
+            else if (sortOption === 'price-desc') sorted.sort((a,b)=> (b.price||0)-(a.price||0));
+            else if (sortOption === 'newest') sorted.sort((a,b)=> (b.id||0)-(a.id||0));
+
+            grid.innerHTML = sorted.map(product => `
                 <div class="product-card">
                     <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/320x280/2a1410/d4af37?text=Product'">
                     <h3 class="product-name">${product.name}</h3>
