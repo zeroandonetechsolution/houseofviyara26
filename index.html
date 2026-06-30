@@ -1020,10 +1020,9 @@
             </div>
             <nav class="nav">
                 <!-- Catalogue button removed per request -->
-                <!-- mobile header icon removed per preference; bottom 'FILTERS' pill will be used on mobile -->
-                <button id="mobileFilterBtn" class="nav-btn mobile-filter-btn" onclick="openFilters()" aria-label="Open filters" style="display:none; visibility:hidden;">
-                </button>
                 <span id="adminAuthArea"></span>
+                <!-- mobile FILTERS pill will be shown centered in header on small screens -->
+                <button id="mobileFilterBtn" class="mobile-filter-toggle" onclick="openFilters()" aria-label="Open filters">FILTERS</button>
             </nav>
         </header>
 
@@ -1127,25 +1126,27 @@
                 }
             </style>
             <style>
-                /* Bottom-centered mobile Filters pill */
+                /* Header-centered mobile Filters pill */
                 .mobile-filter-toggle {
-                    position: fixed;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    bottom: 12px;
-                    z-index: 10060;
-                    background: var(--accent-yellow);
-                    color: #000;
-                    padding: 10px 18px;
-                    border: 3px solid #000;
-                    box-shadow: 6px 6px 0 #000;
-                    font-weight: 900;
-                    letter-spacing: 0.06em;
                     display: none;
-                    cursor: pointer;
                 }
                 @media (max-width: 900px) {
-                    .mobile-filter-toggle { display: block; }
+                    .mobile-filter-toggle {
+                        position: absolute;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        bottom: -20px;
+                        z-index: 10060;
+                        background: var(--accent-yellow);
+                        color: #000;
+                        padding: 10px 18px;
+                        border: 3px solid #000;
+                        box-shadow: 6px 6px 0 #000;
+                        font-weight: 900;
+                        letter-spacing: 0.06em;
+                        display: block;
+                        cursor: pointer;
+                    }
                 }
             </style>
             <div id="catalogue" class="page active">
