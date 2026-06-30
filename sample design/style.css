@@ -398,6 +398,10 @@ html.is-loading body {
     animation: loaderSpin 3s linear infinite;
 }
 
+/* Default text color uses the CSS variable --text-color (set per theme)
+    Removed the previous global !important override so dark sections
+    can show white text when explicitly styled. */
+
 .loader-orbit span {
     position: absolute;
     width: 18px;
@@ -1295,6 +1299,11 @@ video.lazy-loaded {
     color: #fff;
     padding: 60px 40px 30px;
     margin-top: 60px;
+}
+
+/* Ensure footer text remains white even when global text color is overridden */
+.footer, .footer * {
+    color: #fff !important;
 }
 
 .footer-grid {

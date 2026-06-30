@@ -609,13 +609,13 @@
         }
 
         .blocked-screen h1 {
-            color: #d4af37;
+            color: #fff;
             font-size: 3rem;
             margin-bottom: 20px;
         }
 
         .blocked-screen p {
-            color: #c9b896;
+            color: #fff;
             font-size: 1.3rem;
             text-align: center;
             max-width: 600px;
@@ -1025,8 +1025,61 @@
         </header>
 
         <main class="main-content">
+            <style>
+                .catalogue-grid {
+                    display: grid;
+                    grid-template-columns: 260px 1fr;
+                    gap: 24px;
+                    align-items: start;
+                }
+                .filters {
+                    padding: 16px;
+                    border: var(--brutal-border);
+                    background: var(--card-bg);
+                    box-shadow: var(--brutal-shadow);
+                    position: sticky;
+                    top: 88px;
+                }
+                .filter-section strong { display:block; margin-bottom:6px; color:var(--text-color); }
+                .catalogue-content { width:100%; }
+                .trending-collections { display:flex; gap:12px; flex-wrap:wrap; }
+                .collection-card { padding:14px; border:3px solid #000; background:var(--card-bg); cursor:pointer; min-width:140px; text-align:center; box-shadow:var(--brutal-shadow); }
+                .collection-card h4 { margin-bottom:6px; font-size:1rem; }
+                .collection-card p { font-size:0.85rem; color:#666; }
+                .collection-card.selected { outline:4px solid var(--accent-blue); transform: translate(-3px, -3px); }
+
+                @media (max-width: 900px) {
+                    .catalogue-grid { grid-template-columns: 1fr; }
+                    .filters { position: relative; top: auto; }
+                }
+            </style>
             <div id="catalogue" class="page active">
-                <div class="product-grid" id="productGrid"></div>
+                <div class="catalogue-grid">
+                    <aside class="filters" id="filtersPanel">
+                        <h3 style="margin-bottom:12px;">Filters</h3>
+                        <div class="filter-section">
+                            <strong>Fabric Type</strong>
+                            <div id="fabricFilters" style="margin-top:8px; display:flex; flex-direction:column; gap:8px;"></div>
+                        </div>
+
+                        <div class="filter-section" style="margin-top:18px;">
+                            <strong>Max Price (₹)</strong>
+                            <div style="display:flex; gap:12px; align-items:center; margin-top:8px;">
+                                <input type="range" id="priceRange" min="0" max="10000" value="10000" oninput="onPriceRangeChange(this.value)">
+                                <span id="priceRangeValue">₹10000</span>
+                            </div>
+                        </div>
+
+                        <div style="margin-top:18px;">
+                            <button class="btn" onclick="resetFilters()">Reset Filters</button>
+                        </div>
+                    </aside>
+
+                    <section class="catalogue-content">
+                        <div class="trending-collections" id="trendingCollections" style="margin-bottom:24px;"></div>
+                        <div class="product-grid" id="productGrid"></div>
+                    </section>
+                </div>
             </div>
 
             <div id="admin" class="page">
@@ -1094,6 +1147,17 @@
                         <h2>Manage Products</h2>
                         <div id="adminProductList"></div>
                     </div>
+                </div>
+            </div>
+
+            <div id="fabricPage" class="page">
+                <div class="form-section">
+                    <button class="btn" onclick="showPage('catalogue')">← Back</button>
+                    <h2 id="fabricTitle" style="margin-top:12px;">Fabric</h2>
+                    <p id="fabricIntro" style="color:#666; margin-top:8px;">Showing products for selected fabric.</p>
+                </div>
+                <div class="product-list">
+                    <div id="fabricProductGrid" class="product-grid"></div>
                 </div>
             </div>
         </main>
@@ -1193,6 +1257,7 @@
                 id: 1,
                 name: 'Vintage Silk Saree',
                 category: 'clothing',
+                fabric: 'pure cotton',
                 price: 4999,
                 description: 'Handwoven silk saree with intricate zari work',
                 image: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=elegant%20vintage%20silk%20saree%20royal%20design&image_size=square_hd',
@@ -1203,6 +1268,7 @@
                 id: 2,
                 name: 'Silver Plated Jewelry Box',
                 category: 'gift',
+                fabric: '',
                 price: 2499,
                 description: 'Handcrafted silver plated jewelry box with velvet lining',
                 image: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=elegant%20silver%20jewelry%20box%20luxury%20gift&image_size=square_hd',
@@ -1213,6 +1279,7 @@
                 id: 3,
                 name: 'Customized Photo Album',
                 category: 'custom',
+                fabric: '',
                 price: 3999,
                 description: 'Premium leather-bound photo album with gold embossing',
                 image: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=elegant%20leather%20photo%20album%20luxury%20custom&image_size=square_hd',
@@ -1221,12 +1288,100 @@
             }
         ];
 
+        const fabricTypes = ['pure cotton', 'maxis', 'kurti', 'kurti sets', 'cordsets'];
+        let selectedFabrics = [];
+        let priceMax = 10000;
+
+        function renderCollections() {
+            const container = document.getElementById('trendingCollections');
+            container.innerHTML = fabricTypes.map(f => `
+                <div class="collection-card" data-fabric="${f}" onclick="toggleCollectionFilter('${f}', this)">
+                    <h4>${f}</h4>
+                    <p>Trending</p>
+                </div>
+            `).join('');
+            // mark selected
+            selectedFabrics.forEach(f => {
+                const el = container.querySelector(`[data-fabric='${f}']`);
+                if (el) el.classList.add('selected');
+            });
+        }
+
+        function renderFabricFilters() {
+            const container = document.getElementById('fabricFilters');
+            container.innerHTML = fabricTypes.map(f => `
+                <label style="display:flex; gap:8px; align-items:center;">
+                    <input type="checkbox" value="${f}" onchange="onFabricToggle(this)"> ${f}
+                </label>
+            `).join('');
+        }
+
+        function onFabricToggle(checkbox) {
+            const f = checkbox.value;
+            if (checkbox.checked) {
+                if (!selectedFabrics.includes(f)) selectedFabrics.push(f);
+            } else {
+                selectedFabrics = selectedFabrics.filter(x => x !== f);
+            }
+            // sync collection cards
+            document.querySelectorAll('.collection-card').forEach(c => c.classList.toggle('selected', selectedFabrics.includes(c.dataset.fabric)));
+            renderProducts();
+        }
+
+        function toggleCollectionFilter(fabric, el) {
+            const idx = selectedFabrics.indexOf(fabric);
+            if (idx === -1) {
+                selectedFabrics.push(fabric);
+                el.classList.add('selected');
+                const cb = Array.from(document.querySelectorAll('#fabricFilters input')).find(i => i.value===fabric);
+                if (cb) cb.checked = true;
+                // navigate to fabric page for single-fabric view
+                showFabricPage(fabric);
+            } else {
+                selectedFabrics.splice(idx,1);
+                el.classList.remove('selected');
+                const cb = Array.from(document.querySelectorAll('#fabricFilters input')).find(i => i.value===fabric);
+                if (cb) cb.checked = false;
+                // if no fabrics selected, go back to catalogue
+                if (selectedFabrics.length === 0) showPage('catalogue');
+            }
+            renderProducts();
+        }
+
+        function onPriceRangeChange(val) {
+            priceMax = parseInt(val,10);
+            document.getElementById('priceRangeValue').textContent = '₹' + priceMax;
+            renderProducts();
+        }
+
+        function resetFilters() {
+            selectedFabrics = [];
+            priceMax = parseInt(document.getElementById('priceRange').max, 10) || 10000;
+            document.getElementById('priceRange').value = priceMax;
+            document.getElementById('priceRangeValue').textContent = '₹' + priceMax;
+            document.querySelectorAll('#fabricFilters input').forEach(i=>i.checked=false);
+            document.querySelectorAll('.collection-card').forEach(c=>c.classList.remove('selected'));
+            renderProducts();
+        }
+
         function loadProducts() {
             const saved = localStorage.getItem('viyaraProducts');
             products = saved ? JSON.parse(saved) : [...defaultProducts];
             if (!saved) {
                 saveToLocalStorage();
             }
+            // initialize filters and UI
+            const maxPrice = products.reduce((m,p)=> Math.max(m, p.price||0), 0) || 10000;
+            const priceInput = document.getElementById('priceRange');
+            if (priceInput) {
+                priceInput.max = Math.max(10000, maxPrice);
+                priceInput.value = priceInput.max;
+                priceMax = parseInt(priceInput.value, 10);
+                document.getElementById('priceRangeValue').textContent = '₹' + priceMax;
+            }
+
+            renderCollections();
+            renderFabricFilters();
             renderProducts();
             renderAdminList();
             initSizeCheckboxes();
@@ -1561,7 +1716,18 @@
 
         function renderProducts() {
             const grid = document.getElementById('productGrid');
-            grid.innerHTML = products.map(product => `
+            const filtered = products.filter(product => {
+                const withinPrice = (typeof product.price === 'number') ? product.price <= priceMax : true;
+                const matchesFabric = selectedFabrics.length === 0 || (product.fabric && selectedFabrics.includes(product.fabric));
+                return withinPrice && matchesFabric;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div style="padding:24px; text-align:center;">No products match the selected filters.</div>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map(product => `
                 <div class="product-card">
                     <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/320x280/2a1410/d4af37?text=Product'">
                     <h3 class="product-name">${product.name}</h3>
